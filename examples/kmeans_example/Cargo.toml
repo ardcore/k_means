@@ -1,0 +1,10 @@
+[package]
+name = "kmeans_example"
+version = "0.1.0"
+authors = ["Szymon Pilkowski <s.pilkowski@molecule.one>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+k_means = { path = "../../" }
