@@ -1,5 +1,8 @@
+extern crate num_traits;
 use rand::distributions::{IndependentSample, Range};
 use std::cmp::Ordering;
+use std::ops::{Sub};
+use num_traits::sign::Signed;
 
 #[derive(Debug)]
 pub struct Group {
@@ -25,7 +28,7 @@ fn centroid(data: &[f32]) -> f32 {
     sum / length as f32
 }
 
-fn distance(a: &f32, b: &f32) -> f32 {
+fn distance<T: Sub<Output = T> + Signed>(a: T, b: T) -> T {
     (a - b).abs()
 }
 
@@ -33,8 +36,8 @@ fn closest<'a>(groups: &'a mut Vec<Group>, target: f32) -> &'a mut Group {
     let closest = groups
         .iter_mut()
         .min_by(|a, b| {
-            let da = distance(&a.center, &target);
-            let db = distance(&b.center, &target);
+            let da = distance(a.center, target);
+            let db = distance(b.center, target);
             da.partial_cmp(&db).unwrap_or(Ordering::Equal)
         })
         .unwrap();
