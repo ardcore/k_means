@@ -20,10 +20,9 @@ impl Group {
 }
 
 fn centroid(data: &[f32]) -> f32 {
-    let sum: f32 = data.iter().fold(0f32, |acc, curr| acc + curr);
+    let sum: f32 = data.iter().sum();
     let length = data.iter().len();
-    let centroid: f32 = sum / length as f32;
-    centroid
+    sum / length as f32
 }
 
 fn distance(a: &f32, b: &f32) -> f32 {
@@ -34,8 +33,8 @@ fn closest<'a>(groups: &'a mut Vec<Group>, target: f32) -> &'a mut Group {
     let closest = groups
         .iter_mut()
         .min_by(|a, b| {
-            let da = distance(&a.center, &(target as f32));
-            let db = distance(&b.center, &(target as f32));
+            let da = distance(&a.center, &target);
+            let db = distance(&b.center, &target);
             da.partial_cmp(&db).unwrap_or(Ordering::Equal)
         })
         .unwrap();
@@ -79,7 +78,7 @@ pub fn solve(data: &Vec<f32>, groups_count: i32, epochs: i32) -> Vec<Group> {
     for _ in 0..epochs {
         groups.iter_mut().for_each(|group| group.reset());
         data.iter()
-            .for_each(|el| qualify(el.clone() as f32, &mut groups));
+            .for_each(|el| qualify(*el, &mut groups));
         groups
             .iter_mut()
             .for_each(|mut group| update_centroid(&mut group));
